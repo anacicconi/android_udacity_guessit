@@ -55,17 +55,16 @@ class GameFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
 
         // this will make the fragment observe the score and the word live data from the view model
-        viewModel.score.observe(this, Observer { newScore ->
+        // useless if we do binding.setLifecycleOwner(this) and get the value directly from the viewModel in the layout
+        /*viewModel.score.observe(this, Observer { newScore ->
             binding.scoreText.text = newScore.toString()
         })
-
         viewModel.word.observe(this, Observer { newWord ->
             binding.wordText.text = newWord
         })
-
         viewModel.currentTime.observe(this, Observer { newTime ->
             binding.timerText.text = DateUtils.formatElapsedTime(newTime)
-        })
+        })*/
 
         // observe a data in the viewModel (eventGameFinish) and according to it call a function also in the viewModel
         viewModel.eventGameFinish.observe(this, Observer { isFinished ->
@@ -78,6 +77,10 @@ class GameFragment : Fragment() {
         })
 
         binding.gameViewModel = viewModel
+        // use LiveData to automatically update the data binding layout so we can do android:text="@{gameViewModel.word}" on the layout
+        // the binding can observe LiveData updates
+        // if gameViewModel.word is null it will fallback to an empty string
+        binding.setLifecycleOwner(this)
 
         return binding.root
     }
