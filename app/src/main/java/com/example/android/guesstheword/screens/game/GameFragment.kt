@@ -54,13 +54,6 @@ class GameFragment : Fragment() {
         // this will create a new instance of GameViewModel
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
 
-        binding.correctButton.setOnClickListener {
-            viewModel.onCorrect()
-        }
-        binding.skipButton.setOnClickListener {
-            viewModel.onSkip()
-        }
-
         // this will make the fragment observe the score and the word live data from the view model
         viewModel.score.observe(this, Observer { newScore ->
             binding.scoreText.text = newScore.toString()
@@ -83,6 +76,8 @@ class GameFragment : Fragment() {
                 viewModel.onGameFinishComplete()
             }
         })
+
+        binding.gameViewModel = viewModel
 
         return binding.root
     }
